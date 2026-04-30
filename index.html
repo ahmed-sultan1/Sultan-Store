@@ -343,9 +343,9 @@ nav {
             💳 Pay via InstaPay
         </button>
         
-        <button class="pay-btn vodafone" onclick="window.open('tel:01096380149')">
-            📱 Vodafone Cash: 01096380149
-        </button>
+        <button class="pay-btn vodafone" onclick="copyNumber('01096380149')">
+    📱 Click to Copy: 01096380149
+</button>
     </div>
 
     <!-- رجعنا خانات البيانات هنا -->
@@ -431,22 +431,23 @@ function removeItem(i){cart.splice(i,1);save();update()}
 
 function save(){localStorage.setItem("cart",JSON.stringify(cart));}
 
-function update(){
-let box=document.getElementById("cartItems");
-box.innerHTML="";
-let t=0;
+function update() {
+  let box = document.getElementById("cartItems");
+  box.innerHTML = ""; // تصفير المحتوى
+  let t = 0;
 
-cart.forEach((c,i)=>{
-t+=+c.price;
-box.innerHTML+=`
-<div>
-${c.name} - ${c.price} EGP
-<button onclick="removeItem(${i})">X</button>
-</div>`;
-});
+  cart.forEach((c, i) => {
+    t += +c.price;
+    // سطر واحد فقط منظم
+    box.innerHTML += `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:#1a1a1a; padding:10px; border-radius:8px;">
+        <span>${c.name} - ${c.price} EGP</span>
+        <button onclick="event.stopPropagation(); removeItem(${i})" style="background:#ff4d4d; color:white; border:none; border-radius:4px; padding:5px 10px; cursor:pointer; font-weight:bold;">X</button>
+    </div>`;
+  });
 
-document.getElementById("count").innerText=cart.length;
-document.getElementById("total").innerText="Total: "+t+" EGP";
+  document.getElementById("count").innerText = cart.length;
+  document.getElementById("total").innerText = "Total: " + t + " EGP";
 }
 
 function filter(t){if(t=='all')render();else render(productsData.filter(p=>p.category==t))}
