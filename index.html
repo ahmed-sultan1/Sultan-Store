@@ -267,6 +267,35 @@ nav {
     font-size: 16px; /* حجم مريح للكتابة */
   }
 }
+.payment-methods, .checkoutBox {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.pay-btn, .send-order-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.instapay { background: #000; color: #00ff88; border: 2px solid #00ff88; }
+.vodafone { background: #e60000; color: white; }
+.send-order-btn { background: #00ff88; color: #000; margin-top: 10px; }
+
+.checkoutBox input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: white;
+}
+
 }
 
 </style>
@@ -299,19 +328,44 @@ nav {
 <div class="products" id="products"></div>
 
 <!-- CART -->
+<!-- CART -->
 <div class="cart" id="cart">
-<h2>Cart</h2>
-<div id="cartItems"></div>
-<div id="total"></div>
+    <h2>Cart</h2>
+    
+    <!-- هنا بتظهر المنتجات اللي الزبون اختارها -->
+    <div id="cartItems"></div>
+    <div id="total" style="font-weight:bold; color:#00ff88; margin:15px 0;">Total: 0 EGP</div>
 
-<h3>💳 InstaPay: 01222853192</h3>
-<h3>📱 WhatsApp: 01096380149</h3>
+    <!-- قسم أزرار الدفع السريع -->
+    <div class="payment-methods">
+        <!-- لينك انستا باي المباشر -->
+        <button class="pay-btn instapay" onclick="window.open('https://ipn.eg', '_blank')">
+            💳 Pay via InstaPay
+        </button>
+        
+        <button class="pay-btn vodafone" onclick="window.open('tel:01096380149')">
+            📱 Vodafone Cash: 01096380149
+        </button>
+    </div>
 
-<div class="checkoutBox">
-<input id="name" placeholder="Name">
-<input id="address" placeholder="Address">
-<input id="phone" placeholder="Phone">
-<button onclick="sendOrder()">Send Order</button>
+    <!-- رجعنا خانات البيانات هنا -->
+    <div class="checkoutBox">
+        <input id="name" placeholder="Full Name">
+        <input id="address" placeholder="Shipping Address">
+        <input id="phone" placeholder="Phone Number">
+        <button class="send-order-btn" onclick="sendOrder()">Send Order via WhatsApp</button>
+    </div>
+        </button>
+    </div>
+
+    <div class="checkoutBox">
+        <input id="name" placeholder="Name">
+        <input id="address" placeholder="Address">
+        <input id="phone" placeholder="Phone">
+        <button class="send-order-btn" onclick="sendOrder()">Send Order via WhatsApp</button>
+    </div>
+</div>
+</button>
 </div>
 
 <button onclick="checkoutWhatsApp()">WhatsApp Checkout</button>
@@ -451,6 +505,9 @@ window.addEventListener('click', function(e) {
     cart.classList.remove('open');
   }
 });
+function payWithCard(){
+  window.location.href = "https://accept.paymob.com/your-payment-link";
+}
 </script>
 
 </body>
