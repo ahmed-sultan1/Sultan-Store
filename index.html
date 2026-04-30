@@ -191,6 +191,16 @@ button.buy{width:100%;padding:8px;background:#00ff88;border:none;cursor:pointer}
 body {
   overflow-x: hidden;
 }
+/* تأكد إن الهيدر دايماً فوق الستارة */
+nav {
+  z-index: 1001 !important; /* أعلى من الـ Cart اللي هي 1000 */
+}
+
+/* تعديل بسيط للـ Cart عشان ما تغطيش الـ Nav */
+.cart {
+  top: 0;
+  padding-top: 80px; /* مسافة عشان زرار العربة اللي وراها يبان */
+}
 
 @media (max-width: 600px) {
   /* 1. منع الصفحة من الهز أو الخروج عن العرض */
@@ -406,6 +416,21 @@ window.open(`https://wa.me/201234567890?text=${msg}`);
 }
 
 render();update();
+// دالة فتح وقفل العربة
+function toggleCart() {
+  document.getElementById("cart").classList.toggle("open");
+}
+
+// كود قفل العربة عند الضغط في الخارج
+window.addEventListener('click', function(e) {
+  const cart = document.getElementById('cart');
+  const cartBtn = document.querySelector('.cart-btn');
+  
+  // لو الستارة مفتوحة والضغطة مش جواها ومش على زرار الفتح
+  if (cart.classList.contains('open') && !cart.contains(e.target) && !cartBtn.contains(e.target)) {
+    cart.classList.remove('open');
+  }
+});
 </script>
 
 </body>
