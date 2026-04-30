@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Nike Hoodie",
+    "price": 500,
+    "image":"images/hoodie2.jpg",
+    "category": "hoodie"
+  },
+  {
+    "name": "Black Hoodie",
+    "price": 400,
+    "image": "Images/hoodie1.webp",
+    "category": "hoodie"
+  },
+  {
+    "name": "White T-Shirt",
+    "price": 250,
+    "image": "images/white-tshirt.png",
+    "category": "tshirt"
+  },
+  {
+    "name": "Street T-Shirt",
+    "price": 300,
+    "image": "Images/t-shirt.jpg",
+    "category": "tshirt"
+  },
+  { "name": "Shirt",
+    "price": 600,
+    "image": "images/street-tshirt.png",
+    "category": "shirt"}
+]
