@@ -304,7 +304,7 @@ nav {
 <div id="cartItems"></div>
 <div id="total"></div>
 
-<h3>💳 InstaPay: 01060200506</h3>
+<h3>💳 InstaPay: 01222853192</h3>
 <h3>📱 WhatsApp: 01096380149</h3>
 
 <div class="checkoutBox">
@@ -405,14 +405,45 @@ render(productsData.filter(p=>p.name.toLowerCase().includes(v)))
 function toggleCart(){document.getElementById("cart").classList.toggle("open")}
 
 function sendOrder(){
-let msg=`Order:%0AName:${name.value}%0AAddress:${address.value}%0APhone:${phone.value}`;
-window.open(`https://wa.me/201096380149?text=${msg}`); //رقم الواتس اما تعمل send order
+function sendOrder() {
+  // تعريف العناصر عشان نجيب القيم منها
+  let userName = document.getElementById("name").value;
+  let userAddress = document.getElementById("address").value;
+  let userPhone = document.getElementById("phone").value;
+
+  if(userName == "" || userAddress == "" || userPhone == "") {
+    alert("برجاء ملء جميع البيانات");
+    return;
+  }
+
+  // تجميع المنتجات من الشنطة
+  let productsList = "";
+  cart.forEach((item, index) => {
+    productsList += `${index + 1}- ${item.name} (${item.price} EGP)%0A`;
+  });
+
+  // حساب الإجمالي
+  let total = cart.reduce((sum, item) => sum + item.price, 0);
+
+  // تجهيز الرسالة
+  let msg = `*New Order* 🔥%0A%0A` +
+            `*Name:* ${userName}%0A` +
+            `*Address:* ${userAddress}%0A` +
+            `*Phone:* ${userPhone}%0A%0A` +
+            `*Products:*%0A${productsList}%0A` +
+            `*Total:* ${total} EGP`;
+
+  // رقم الواتساب بتاعك (تأكد من كتابته بالكود الدولي بدون أصفار في الأول)
+  let myNumber = "201096380149"; 
+
+  window.open(`https://wa.me{201096380149}?text=${msg}`);
+} //رقم الواتس اما تعمل send order
 }
 
 function checkoutWhatsApp(){
 let msg="Order:%0A";
 cart.forEach(i=>msg+=`- ${i.name}%0A`);
-window.open(`https://wa.me/201096380149?text=${msg}`);// رقم الواتس برضو 
+window.open(`https://wa.me/201096380149?text=${msg}`);// رقم الواتس (send order)
 }
 
 render();update();
