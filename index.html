@@ -172,52 +172,57 @@ body {
   overflow-x: hidden;
 }
 
-/* شاشات الموبايل */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
+  /* 1. منع الصفحة من الهز أو الخروج عن العرض */
+  body {
+    overflow-x: hidden;
+  }
 
+  /* 2. ضبط الهيدر (اللوجو والشنطة) */
   nav {
-    flex-direction: row;
-    padding: 10px 15px;
+    padding: 10px 15px !important;
   }
+  .logo { font-size: 16px; }
 
-  .hero h1 {
-    font-size: 22px;
-  }
-
+  /* 3. تصغير البحث عشان ميزقش الشاشة */
   .search input {
-    width: 90%;
+    width: 85% !important;
+    font-size: 14px;
   }
 
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .filters button {
-    font-size: 12px;
-    padding: 6px 10px;
-  }
-
+  /* 4. أهم تعديل: كروت المنتجات */
   .products {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 10px;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important; /* تقليل الفراغات عشان الصور تظهر أكبر */
+    padding: 8px !important;
   }
 
-  .card img {
-    height: 150px;
+  .card {
+    padding: 8px !important;
+    border-radius: 10px !important;
   }
 
-  #welcome h1 {
-    font-size: 32px;
+  img {
+    height: 160px !important; /* ارتفاع مناسب جداً للموبايل */
+    border-radius: 8px !important;
   }
 
-  .cart {
-    width: 100%;
+  .card h3 {
+    font-size: 14px !important;
+    margin: 8px 0 4px 0 !important;
+  }
+
+  .price {
+    font-size: 13px !important;
+    font-weight: bold;
+  }
+
+  /* 5. تصغير الفلتر (الزراير) */
+  .filters button {
+    padding: 6px 10px !important;
+    font-size: 12px !important;
   }
 }
-
 </style>
 </head>
 
