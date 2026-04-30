@@ -58,20 +58,39 @@ img{width:100%;height:200px;object-fit:cover;border-radius:10px}
 .price{color:#00ff88}
 button.buy{width:100%;padding:8px;background:#00ff88;border:none;cursor:pointer}
 
-.cart{position:fixed;right:-350px;top:0;width:300px;height:100%;
-    background:#111;padding:15px;transition:.4s;overflow:auto}
-.cart.open{right:0}
+.cart{
+  position: fixed;
+  right: -100%; /* مخفية تماماً بره الشاشة */
+  top: 0;
+  width: 350px; /* العرض الطبيعي للكمبيوتر */
+  max-width: 100%; /* عشان ما تخرجش بره شاشة الموبايل */
+  height: 100%;
+  background: #111;
+  padding: 20px;
+  transition: 0.4s ease-in-out;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+}
+
+.cart.open {
+  right: 0; /* تظهر لما تضغط على الزرار */
+}
+
 
 #welcome{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
+    position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: radial-gradient(circle at center, #0f2027, #000);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  z-index:999;
+  display: flex;
+  align-items: center;      /* توسيط عمودي */
+  justify-content: center;   /* توسيط أفقي */
+  flex-direction: column;
+  z-index: 9999;             /* عشان يغطي أي حاجة تانية */
+  text-align: center;        /* توسيط النص */
+  padding: 20px;
+  box-sizing: border-box;    /* عشان الـ padding ميخرجش التصميم بره */
 
   animation: fadeZoomIn 1.2s ease forwards;
 }
@@ -92,12 +111,13 @@ button.buy{width:100%;padding:8px;background:#00ff88;border:none;cursor:pointer}
 
 /* العنوان */
 #welcome h1{
-  font-family:'Times New Roman',Times,serif;
-  font-size:60px;
-  color:#f6fbf9;
-
-  /* Glow ثابت */
-  text-shadow: 0 0 12px rgba(0,255,136,0.6);
+    font-family: 'Times New Roman', Times, serif;
+  font-size: 35px;           /* حجم مثالي للموبايل */
+  color: #fff;
+  text-shadow: 0 0 20px #00ff88;
+  margin: 0 0 30px 0;        /* مسافة تحت العنوان قبل الزرار */
+  width: 100%;               /* يملأ العرض المتاح */
+  line-height: 1.3;          /* مسافة بين السطور عشان لو نزل سطر جديد */
 
   animation: glowFloat 4s ease-in-out infinite;
 }
@@ -119,14 +139,14 @@ button.buy{width:100%;padding:8px;background:#00ff88;border:none;cursor:pointer}
 
 /* الزر */
 #welcome button{
-  margin-top:25px;
-  padding:12px 25px;
-  border:none;
-  background:#00ff88;
-  font-weight:bold;
-  cursor:pointer;
-  border-radius:10px;
-  box-shadow:0 0 20px #00ff88;
+   padding: 12px 40px;
+  font-size: 18px;
+  border-radius: 30px;       /* خليه دائري شوية بيبقى أشيك */
+  border: none;
+  background: #00ff88;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
 
   transition:0.3s;
 }
@@ -222,7 +242,23 @@ body {
     padding: 6px 10px !important;
     font-size: 12px !important;
   }
+  @media (max-width: 600px) {
+  .cart {
+    width: 85%; /* تاخد 85% من عرض الشاشة بس */
+  }
+  
+  /* تظبيط العناوين جوه الشنطة عشان ما تخرجش بره */
+  .cart h3 {
+    font-size: 14px !important;
+    word-break: break-all; /* عشان الأرقام الطويلة ما تكسرش التصميم */
+  }
+
+  .checkoutBox input {
+    font-size: 16px; /* حجم مريح للكتابة */
+  }
 }
+}
+
 </style>
 </head>
 
