@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<title>Pro Store</title>
+<title>Sultan Store</title>
 
 <style>
+  
 body {
   margin: 0;
   font-family: 'Poppins', Arial, sans-serif;
@@ -160,6 +162,61 @@ button.buy{width:100%;padding:8px;background:#00ff88;border:none;cursor:pointer}
 .checkoutBox button{
   width:100%;padding:10px;background:#00ff88;border:none;cursor:pointer;font-weight:bold
 }
+/* RESPONSIVE FIX */
+* {
+  box-sizing: border-box;
+}
+
+/* يمنع أي overflow في الموبايل */
+body {
+  overflow-x: hidden;
+}
+
+/* شاشات الموبايل */
+@media (max-width: 768px) {
+
+  nav {
+    flex-direction: row;
+    padding: 10px 15px;
+  }
+
+  .hero h1 {
+    font-size: 22px;
+  }
+
+  .search input {
+    width: 90%;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .filters button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .products {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .card img {
+    height: 150px;
+  }
+
+  #welcome h1 {
+    font-size: 32px;
+  }
+
+  .cart {
+    width: 100%;
+  }
+}
 
 </style>
 </head>
@@ -172,7 +229,7 @@ button.buy{width:100%;padding:8px;background:#00ff88;border:none;cursor:pointer}
 </div>
 
 <nav>
-<div class="logo">Sultan STORE</div>
+<div class="logo">SULTAN STORE</div>
 <button class="cart-btn" onclick="toggleCart()">🛒 (<span id="count">0</span>)</button>
 </nav>
 
