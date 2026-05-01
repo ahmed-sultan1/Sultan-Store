@@ -1,105 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sultan Store</title>
 
 <style>
-  
+
+/* ===== GLOBAL ===== */
 body {
   margin: 0;
   font-family: 'Poppins', Arial, sans-serif;
-  background: linear-gradient(-45deg, #0f2027, #2c5364, #1dd2ba, #0f2027);
-  background-size: 400% 400%;
-  animation: bgMove 12s ease infinite;
-  color: white;
+  background: #f5f5f5;
+  color: #111;
 }
 
-@keyframes bgMove {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
-}
-
+/* ===== NAVBAR ===== */
 nav{
   display:flex;
   justify-content:space-between;
-  padding:15px 25px;
-  background:rgba(0,0,0,0.85);
-  border-bottom:2px solid #00ff88;
+  align-items:center;
+  padding:15px 40px;
+  background:#fff;
+  border-bottom:1px solid #eee;
   position:sticky;
   top:0;
-  z-index:10;
+  z-index:1000;
 }
 
-.logo{color:#00ff88;font-weight:bold;}
-.cart-btn{background:#00ff88;border:none;padding:8px 12px;
-    border-radius:6px;font-weight:bold;cursor:pointer}
+.logo{
+  font-weight:bold;
+  font-size:20px;
+}
 
-.search{display:flex;justify-content:center;margin:10px;}
-.search input{padding:10px;width:60%;border-radius:8px;border:none;outline:none;}
+.cart-btn{
+  background:#0f172a;
+  color:#fff;
+  border:none;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+}
 
-.hero{text-align:center;padding:20px;}
-.hero h1{font-family:'Times New Roman',Times,serif;color:#fff;
-text-shadow:0 0 15px #00ff88;}
+/* ===== HERO ===== */
+.hero{
+  height:300px;
+  background:linear-gradient(to right,#0f172a,#1e293b);
+  display:flex;
+  align-items:center;
+  padding:40px;
+  color:white;
+}
 
-.filters{text-align:center;margin:10px;}
-.filters button{margin:5px;padding:8px 12px;border:none;
-    background:#111;
-    color:white;border-radius:6px;cursor:pointer}
+.hero h1{
+  font-size:48px;
+}
 
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;padding:20px}
+/* ===== SEARCH ===== */
+.search{
+  display:flex;
+  justify-content:center;
+  margin:20px;
+}
 
-.card{background:#111;padding:15px;border-radius:15px;cursor:pointer;transition:.3s}
-.card:hover{transform:translateY(-8px) scale(1.05);box-shadow:0 0 20px #00ff88}
-img{width:100%;height:200px;object-fit:cover;border-radius:10px}
-.price{color:#00ff88}
-button.buy{width:100%;padding:8px;background:#00ff88;border:none;cursor:pointer}
+.search input{
+  padding:10px;
+  width:50%;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
 
+/* ===== FILTERS ===== */
+.filters{
+  text-align:center;
+  margin:20px;
+}
+
+.filters button{
+  margin:5px;
+  padding:8px 15px;
+  border:none;
+  background:#eee;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+/* ===== PRODUCTS ===== */
+.products{
+  padding:40px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:#fff;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+}
+
+.card img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:10px;
+}
+
+.buy{
+  width:100%;
+  padding:10px;
+  background:#0f172a;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* ===== CART ===== */
 .cart{
   position: fixed;
-  right: -100%; /* مخفية تماماً بره الشاشة */
+  right: -100%;
   top: 0;
-  width: 350px; /* العرض الطبيعي للكمبيوتر */
-  max-width: 100%; /* عشان ما تخرجش بره شاشة الموبايل */
+  width: 350px;
   height: 100%;
-  background: #111;
+  background: #fff;
   padding: 20px;
-  transition: 0.4s ease-in-out;
+  transition: 0.4s;
   overflow-y: auto;
   z-index: 1000;
-  box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+  box-shadow: -5px 0 15px rgba(0,0,0,0.1);
 }
 
 .cart.open {
-  right: 0; /* تظهر لما تضغط على الزرار */
+  right: 0;
 }
 
-
-#welcome{
-    position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: radial-gradient(circle at center, #0f2027, #000);
+/* ===== PAYMENT ===== */
+.payment-methods {
   display: flex;
-  align-items: center;      /* توسيط عمودي */
-  justify-content: center;   /* توسيط أفقي */
   flex-direction: column;
-  z-index: 9999;             /* عشان يغطي أي حاجة تانية */
-  text-align: center;        /* توسيط النص */
-  padding: 20px;
-  box-sizing: border-box;    /* عشان الـ padding ميخرجش التصميم بره */
-
-  animation: fadeZoomIn 1.2s ease forwards;
+  gap: 10px;
+  margin: 15px 0;
 }
 
-/* دخول سينمائي */
-@keyframes fadeZoomIn{
+.pay-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.instapay {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+}
+
+.vodafone {
+  background: #e60000;
+  color: white;
+}
+
+/* ===== CHECKOUT ===== */
+.checkoutBox input{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:6px;
+  border:1px solid #ddd;
+}
+
+.send-order-btn{
+  width:100%;
+  padding:10px;
+  background:#0f172a;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* ===== WELCOME ===== */
+#welcome{
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:#f5f5f5;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  text-align:center;
+
+  animation: fadeZoom 0.8s ease;
+}
+
+/* ✨ animation دخول */
+@keyframes fadeZoom{
   from{
     opacity:0;
-    transform:scale(1.2);
+    transform:scale(1.1);
     filter:blur(10px);
   }
   to{
@@ -109,193 +216,35 @@ button.buy{width:100%;padding:8px;background:#00ff88;border:none;cursor:pointer}
   }
 }
 
-/* العنوان */
+/* ✨ حركة خفيفة للنص */
 #welcome h1{
-    font-family: 'Times New Roman', Times, serif;
-  font-size: 35px;           /* حجم مثالي للموبايل */
-  color: #fff;
-  text-shadow: 0 0 20px #00ff88;
-  margin: 0 0 30px 0;        /* مسافة تحت العنوان قبل الزرار */
-  width: 100%;               /* يملأ العرض المتاح */
-  line-height: 1.3;          /* مسافة بين السطور عشان لو نزل سطر جديد */
-
-  animation: glowFloat 4s ease-in-out infinite;
+  font-size:40px;
+  animation: floatText 3s ease-in-out infinite;
 }
 
-
-/* حركة فخمة (float + glow pulse) */
-@keyframes glowFloat{
-  0%{
-    transform:translateY(0px) scale(1);
-  }
-  50%{
-    transform:translateY(-6px) scale(1.03);
-  }
-  100%{
-    transform:translateY(0px) scale(1);
-  }
+@keyframes floatText{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+  100%{transform:translateY(0)}
 }
 
+#welcome p{
+  color:#666;
+}
 
-/* الزر */
 #welcome button{
-   padding: 12px 40px;
-  font-size: 18px;
-  border-radius: 30px;       /* خليه دائري شوية بيبقى أشيك */
-  border: none;
-  background: #00ff88;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
-
+  margin-top:20px;
+  padding:12px 30px;
+  border:none;
+  background:#0f172a;
+  color:#fff;
+  border-radius:8px;
+  cursor:pointer;
   transition:0.3s;
 }
 
 #welcome button:hover{
-  transform:scale(1.15);
-  box-shadow:0 0 40px #00ff88;
-}
-
-/* PRODUCT PAGE */
-#detailView{
-  display:none;
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:#000;
-  z-index:999;
-  padding:20px;
-  overflow:auto;
-}
-.backBtn{background:#00ff88;border:none;padding:8px 12px;
-    cursor:pointer;margin-bottom:10px}
-
-/* CHECKOUT */
-.checkoutBox{
-  margin-top:15px;
-  padding:10px;
-  border-top:1px solid #333;
-}
-.checkoutBox input{
-  width:100%;padding:8px;margin:5px 0;border:none;border-radius:6px
-}
-.checkoutBox button{
-  width:100%;padding:10px;background:#00ff88;border:none;cursor:pointer;font-weight:bold
-}
-/* RESPONSIVE FIX */
-* {
-  box-sizing: border-box;
-}
-
-/* يمنع أي overflow في الموبايل */
-body {
-  overflow-x: hidden;
-}
-/* تأكد إن الهيدر دايماً فوق الستارة */
-nav {
-  z-index: 1001 !important; /* أعلى من الـ Cart اللي هي 1000 */
-}
-
-/* تعديل بسيط للـ Cart عشان ما تغطيش الـ Nav */
-.cart {
-  top: 0;
-  padding-top: 80px; /* مسافة عشان زرار العربة اللي وراها يبان */
-}
-
-@media (max-width: 600px) {
-  /* 1. منع الصفحة من الهز أو الخروج عن العرض */
-  body {
-    overflow-x: hidden;
-  }
-
-  /* 2. ضبط الهيدر (اللوجو والشنطة) */
-  nav {
-    padding: 10px 15px !important;
-  }
-  .logo { font-size: 16px; }
-
-  /* 3. تصغير البحث عشان ميزقش الشاشة */
-  .search input {
-    width: 85% !important;
-    font-size: 14px;
-  }
-
-  /* 4. أهم تعديل: كروت المنتجات */
-  .products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px !important; /* تقليل الفراغات عشان الصور تظهر أكبر */
-    padding: 8px !important;
-  }
-
-  .card {
-    padding: 8px !important;
-    border-radius: 10px !important;
-  }
-
-  img {
-    height: 160px !important; /* ارتفاع مناسب جداً للموبايل */
-    border-radius: 8px !important;
-  }
-
-  .card h3 {
-    font-size: 14px !important;
-    margin: 8px 0 4px 0 !important;
-  }
-
-  .price {
-    font-size: 13px !important;
-    font-weight: bold;
-  }
-
-  /* 5. تصغير الفلتر (الزراير) */
-  .filters button {
-    padding: 6px 10px !important;
-    font-size: 12px !important;
-  }
-  @media (max-width: 600px) {
-  .cart {
-    width: 85%; /* تاخد 85% من عرض الشاشة بس */
-  }
-  
-  /* تظبيط العناوين جوه الشنطة عشان ما تخرجش بره */
-  .cart h3 {
-    font-size: 14px !important;
-    word-break: break-all; /* عشان الأرقام الطويلة ما تكسرش التصميم */
-  }
-
-  .checkoutBox input {
-    font-size: 16px; /* حجم مريح للكتابة */
-  }
-}
-.payment-methods, .checkoutBox {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 15px;
-}
-
-.pay-btn, .send-order-btn {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 15px;
-}
-
-.instapay { background: #fdf9f9; color: #8268b9; border: 2px solid #00ff88; }
-.vodafone { background: #e60000; color: white; }
-.send-order-btn { background: #00ff88; color: #000; margin-top: 10px; }
-
-.checkoutBox input {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    background: #1a1a1a;
-    color: white;
-}
-
+  transform:scale(1.1);
 }
 
 </style>
@@ -303,21 +252,27 @@ nav {
 
 <body>
 
+<!-- WELCOME -->
 <div id="welcome">
-<h1>WELCOME TO SULTAN STORE </h1>
-<button onclick="enterStore()">Enter</button>
+  <h1>Welcome to Sultan Store</h1>
+  <p>Premium men's fashion</p>
+  <button onclick="enterStore()">Enter Store</button>
 </div>
 
 <nav>
-<div class="logo">SULTAN STORE</div>
+<div class="logo">SULTAN</div>
 <button class="cart-btn" onclick="toggleCart()">🛒 (<span id="count">0</span>)</button>
 </nav>
+
+<div class="hero">
+  <div>
+    <h1>New Collection</h1>
+  </div>
+</div>
 
 <div class="search">
 <input id="search" oninput="searchProducts()" placeholder="Search products...">
 </div>
-
-<div class="hero"><h1>NEW COLLECTION 🔥</h1></div>
 
 <div class="filters">
 <button onclick="filter('all')">All</button>
@@ -328,188 +283,131 @@ nav {
 <div class="products" id="products"></div>
 
 <!-- CART -->
-<!-- CART -->
 <div class="cart" id="cart">
     <h2>Cart</h2>
-    
-    <!-- هنا بتظهر المنتجات اللي الزبون اختارها -->
     <div id="cartItems"></div>
-    <div id="total" style="font-weight:bold; color:#00ff88; margin:15px 0;">Total: 0 EGP</div>
+    <div id="total">Total: 0 EGP</div>
 
-    <!-- قسم أزرار الدفع السريع -->
     <div class="payment-methods">
-        <!-- لينك انستا باي المباشر -->
-        <button class="pay-btn instapay" onclick="window.open('https://ipn.eg/S/ahmedsultan3523/instapay/9QjNRe')">
-            💳 Pay via InstaPay
-        </button>
-        
-        <button class="pay-btn vodafone" onclick="copyNumber('01096380149')">
-    📱 vodafone Cash: 01096380149
-</button>
+      <button class="pay-btn instapay"
+        onclick="window.open('https://ipn.eg/S/ahmedsultan3523/instapay/9QjNRe')">
+        💳 Pay via InstaPay
+      </button>
+
+      <button class="pay-btn vodafone"
+        onclick="copyNumber('01096380149')">
+        📱 Vodafone Cash: 01096380149
+      </button>
     </div>
 
-    <!-- رجعنا خانات البيانات هنا -->
     <div class="checkoutBox">
         <input id="name" placeholder="Full Name">
-        <input id="address" placeholder="Shipping Address">
-        <input id="phone" placeholder="Phone Number">
-        <button class="send-order-btn" onclick="sendOrder()">Send Order via WhatsApp</button>
-    </div>
-        </button>
-    </div>
-
-    <div class="checkoutBox">
-        <input id="name" placeholder="Name">
         <input id="address" placeholder="Address">
         <input id="phone" placeholder="Phone">
         <button class="send-order-btn" onclick="sendOrder()">Send Order via WhatsApp</button>
     </div>
 </div>
-</button>
-</div>
-
-<button onclick="checkoutWhatsApp()">WhatsApp Checkout</button>
-</div>
-
-<!-- PRODUCT PAGE -->
-<div id="detailView">
-<button class="backBtn" onclick="goBack()">⬅ Back</button>
-<div id="detailContent"></div>
-</div>
 
 <script>
-let productsData = JSON.parse(localStorage.getItem("products")) || [
-  {name:"Nike Hoodie",price:500,image:"Images/hoodie2.jpg",category:"hoodie"},
-  {name:"White T-Shirt",price:250,image:"https://via.placeholder.com/300",category:"tshirt"},
-  {name:"Street T-Shirt",price:300,image:"Images/t-shirt.jpg",category:"tshirt"},
-  {name:"Black Hoodie",price:400,image:"Images/hoodie1.webp",category:"hoodie"},
-  {name:"Shirt",price:600,image:"https://via.placeholder.com/300",category:"shirt"},
 
+/* ===== DATA ===== */
+let productsData = [
+  {name:"Classic Blue Polo",price:299,image:"Images/Shirt4.webp",category:"tshirt"},
+  {name:"Burgundy Hoodie",price:450,image:"Images/hoodie1.webp",category:"hoodie"},
+  {name:"Street T-Shirt",price:300,image:"Images/t-shirt.jpg",category:"tshirt"},
+  {name:"T-Shirt",price:250,image:"Images/download.webp",category:"tshirt"},
+  {name:"Shirt",price:400,image:"Images/download (1).webp",category:"Shirt"},
 ];
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let cart = [];
 
-function enterStore(){
-  document.getElementById("welcome").style.display="none";
-  history.pushState({page:"store"},"");
-  render();update();
-}
-
-window.onpopstate=function(){
-  document.getElementById("detailView").style.display="none";
-}
-
+/* ===== RENDER ===== */
 function render(data=productsData){
 let box=document.getElementById("products");box.innerHTML="";
 data.forEach((p,i)=>{
 box.innerHTML+=`
-<div class='card' onclick="openProduct(${i})">
+<div class='card'>
 <img src='${p.image}'>
 <h3>${p.name}</h3>
-<p class='price'>${p.price} EGP</p>
-<button class='buy' onclick="event.stopPropagation();add(${i})">Add</button>
+<p>${p.price} EGP</p>
+<button class='buy' onclick="add(${i})">Add to Cart</button>
 </div>`})
 }
 
-function openProduct(i){
-let p=productsData[i];
-document.getElementById("detailView").style.display="block";
-document.getElementById("detailContent").innerHTML=`
-<h2>${p.name}</h2>
-<img src='${p.image}' style='width:100%'>
-<h3>${p.price} EGP</h3>
-<button class='buy' onclick="add(${i})">Add to Cart</button>
-`;
-history.pushState({page:"detail"},"");
+/* ===== CART ===== */
+function add(i){cart.push(productsData[i]);update()}
+
+function update(){
+let box=document.getElementById("cartItems");box.innerHTML="";
+let t=0;
+
+cart.forEach((c,i)=>{
+t+=c.price;
+box.innerHTML+=`
+<div style="display:flex;justify-content:space-between">
+<span>${c.name}</span>
+<button onclick="event.stopPropagation(); removeItem(${i})">X</button>
+</div>`
+})
+
+document.getElementById("count").innerText=cart.length;
+document.getElementById("total").innerText="Total: "+t+" EGP";
 }
 
-function goBack(){history.back();}
-
-function add(i){cart.push(productsData[i]);save();update()}
-
-function removeItem(i){cart.splice(i,1);save();update()}
-
-function save(){localStorage.setItem("cart",JSON.stringify(cart));}
-
-function update() {
-  let box = document.getElementById("cartItems");
-  box.innerHTML = ""; // تصفير المحتوى
-  let t = 0;
-
-  cart.forEach((c, i) => {
-    t += +c.price;
-    // سطر واحد فقط منظم
-    box.innerHTML += `
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:#1a1a1a; padding:10px; border-radius:8px;">
-        <span>${c.name} - ${c.price} EGP</span>
-        <button onclick="event.stopPropagation(); removeItem(${i})" style="background:#ff4d4d; color:white; border:none; border-radius:4px; padding:5px 10px; cursor:pointer; font-weight:bold;">X</button>
-    </div>`;
-  });
-
-  document.getElementById("count").innerText = cart.length;
-  document.getElementById("total").innerText = "Total: " + t + " EGP";
+function removeItem(i){
+cart.splice(i,1);
+update();
 }
 
-function filter(t){if(t=='all')render();else render(productsData.filter(p=>p.category==t))}
+/* ===== FILTER ===== */
+function filter(t){
+if(t=='all')render();
+else render(productsData.filter(p=>p.category==t))
+}
 
+/* ===== SEARCH ===== */
 function searchProducts(){
 let v=document.getElementById("search").value.toLowerCase();
 render(productsData.filter(p=>p.name.toLowerCase().includes(v)))
 }
 
-function toggleCart(){document.getElementById("cart").classList.toggle("open")}
-
-function sendOrder(){
-  let userName = document.getElementById("name").value;
-  let userAddress = document.getElementById("address").value;
-  let userPhone = document.getElementById("phone").value;
-
-  if (userName === "" || userAddress === "" || userPhone === "") {
-    alert("برجاء ملء جميع البيانات");
-    return;
-  }
-
-  let productsList = "";
-  cart.forEach((item, index) => {
-    productsList += `${index + 1}- ${item.name} (${item.price} EGP)%0A`;
-  });
-
-  let total = cart.reduce((sum, item) => sum + item.price, 0);
-
-  let msg =
-    `*New Order* %0A%0A` +
-    `*Name:* ${userName}%0A` +
-    `*Address:* ${userAddress}%0A` +
-    `*Phone:* ${userPhone}%0A%0A` +
-    `*Products:*%0A${productsList}%0A` +
-    `*Total:* ${total} EGP`;
-
-  let myNumber = "201096380149";
-
-  window.open(`https://wa.me/${myNumber}?text=${msg}`);
-}// رقم الواتس (send order)
-
-
-render();update();
-// دالة فتح وقفل العربة
-function toggleCart() {
-  document.getElementById("cart").classList.toggle("open");
+/* ===== CART TOGGLE ===== */
+function toggleCart(){
+document.getElementById("cart").classList.toggle("open")
 }
 
-// كود قفل العربة عند الضغط في الخارج
+/* ===== COPY NUMBER ===== */
+function copyNumber(num){
+navigator.clipboard.writeText(num);
+alert("Number copied 👍");
+}
+
+/* ===== WHATSAPP ===== */
+function sendOrder(){
+let msg="New Order:%0A";
+cart.forEach(c=>msg+=c.name+" - "+c.price+" EGP%0A");
+window.open("https://wa.me/201096380149?text="+msg);
+}
+
+/* ===== WELCOME ===== */
+function enterStore(){
+  document.getElementById("welcome").style.display="none";
+}
+
+/* ===== AI CLOSE CART ===== */
 window.addEventListener('click', function(e) {
   const cart = document.getElementById('cart');
   const cartBtn = document.querySelector('.cart-btn');
-  
-  // لو الستارة مفتوحة والضغطة مش جواها ومش على زرار الفتح
-  if (cart.classList.contains('open') && !cart.contains(e.target) && !cartBtn.contains(e.target)) {
-    cart.classList.remove('open');
-  }
+
+  if (cart.contains(e.target)) return;
+  if (cartBtn.contains(e.target)) return;
+
+  cart.classList.remove('open');
 });
-function payWithCard(){
-  window.location.href = "https://accept.paymob.com/your-payment-link";
-}
+
+render();
+
 </script>
 
 </body>
-</html>                                                             
+</html>
