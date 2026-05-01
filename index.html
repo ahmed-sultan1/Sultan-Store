@@ -382,11 +382,27 @@ navigator.clipboard.writeText(num);
 alert("Number copied 👍");
 }
 
-/* ===== WHATSAPP ===== */
+/* ===== WHATSAPP ===== */{
 function sendOrder(){
-let msg="New Order:%0A";
-cart.forEach(c=>msg+=c.name+" - "+c.price+" EGP%0A");
+let msg="New Order:%0A%0A";
+
+msg+="*Name:* "+document.getElementById("name").value+"%0A";
+msg+="*Address:* "+document.getElementById("address").value+"%0A";
+msg+="*Phone:* "+document.getElementById("phone").value+"%0A%0A";
+
+msg+="*Products:*%0A";
+
+let total=0;
+
+cart.forEach((c,i)=>{
+total+=c.price;
+msg+=(i+1)+"- "+c.name+" ("+c.price+" EGP)%0A";
+});
+
+msg+="%0A*Total:* "+total+" EGP";
+
 window.open("https://wa.me/201096380149?text="+msg);
+}
 }
 
 /* ===== WELCOME ===== */
