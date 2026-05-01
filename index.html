@@ -15,6 +15,18 @@ body {
   color: #111;
 }
 
+/* ===== OVERLAY ===== */
+#overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.35);
+  display:none;
+  z-index:999;
+}
+
 /* ===== NAVBAR ===== */
 nav{
   display:flex;
@@ -198,38 +210,6 @@ nav{
   align-items:center;
   z-index:9999;
   text-align:center;
-
-  animation: fadeZoom 0.8s ease;
-}
-
-/* ✨ animation دخول */
-@keyframes fadeZoom{
-  from{
-    opacity:0;
-    transform:scale(1.1);
-    filter:blur(10px);
-  }
-  to{
-    opacity:1;
-    transform:scale(1);
-    filter:blur(0);
-  }
-}
-
-/* ✨ حركة خفيفة للنص */
-#welcome h1{
-  font-size:40px;
-  animation: floatText 3s ease-in-out infinite;
-}
-
-@keyframes floatText{
-  0%{transform:translateY(0)}
-  50%{transform:translateY(-8px)}
-  100%{transform:translateY(0)}
-}
-
-#welcome p{
-  color:#666;
 }
 
 #welcome button{
@@ -240,17 +220,15 @@ nav{
   color:#fff;
   border-radius:8px;
   cursor:pointer;
-  transition:0.3s;
-}
-
-#welcome button:hover{
-  transform:scale(1.1);
 }
 
 </style>
 </head>
 
 <body>
+
+<!-- OVERLAY -->
+<div id="overlay" onclick="closeCart()"></div>
 
 <!-- WELCOME -->
 <div id="welcome">
@@ -346,7 +324,7 @@ t+=c.price;
 box.innerHTML+=`
 <div style="display:flex;justify-content:space-between">
 <span>${c.name}</span>
-<button onclick="event.stopPropagation(); removeItem(${i})">X</button>
+<button onclick="removeItem(${i})">X</button>
 </div>`
 })
 
@@ -371,26 +349,55 @@ let v=document.getElementById("search").value.toLowerCase();
 render(productsData.filter(p=>p.name.toLowerCase().includes(v)))
 }
 
-/* ===== CART TOGGLE ===== */
+/* ===== CART CONTROL (AI TOUCH) ===== */
 function toggleCart(){
-document.getElementById("cart").classList.toggle("open")
+let cartEl = document.getElementById("cart");
+let overlay = document.getElementById("overlay");
+
+cartEl.classList.toggle("open");
+
+if(cartEl.classList.contains("open")){
+  overlay.style.display="block";
+}else{
+  overlay.style.display="none";
+}
 }
 
-/* ===== COPY NUMBER ===== */
+function closeCart(){
+document.getElementById("cart").classList.remove("open");
+document.getElementById("overlay").style.display="none";
+}
+
+/* ===== SWIPE TO CLOSE ===== */
+let startX = 0;
+const cartEl = document.getElementById("cart");
+
+cartEl.addEventListener("touchstart", function(e){
+startX = e.touches[0].clientX;
+});
+
+cartEl.addEventListener("touchmove", function(e){
+let moveX = e.touches[0].clientX;
+if(startX - moveX > 80){
+  closeCart();
+}
+});
+
+/* ===== COPY ===== */
 function copyNumber(num){
 navigator.clipboard.writeText(num);
 alert("Number copied 👍");
 }
 
-/* ===== WHATSAPP ===== */{
+/* ===== WHATSAPP ORDER ===== */
 function sendOrder(){
-let msg="New Order:%0A%0A";
+let msg="New Order%0A%0A";
 
-msg+="*Name:* "+document.getElementById("name").value+"%0A";
-msg+="*Address:* "+document.getElementById("address").value+"%0A";
-msg+="*Phone:* "+document.getElementById("phone").value+"%0A%0A";
+msg+="Name: "+document.getElementById("name").value+"%0A";
+msg+="Address: "+document.getElementById("address").value+"%0A";
+msg+="Phone: "+document.getElementById("phone").value+"%0A%0A";
 
-msg+="*Products:*%0A";
+msg+="Products:%0A";
 
 let total=0;
 
@@ -399,27 +406,15 @@ total+=c.price;
 msg+=(i+1)+"- "+c.name+" ("+c.price+" EGP)%0A";
 });
 
-msg+="%0A*Total:* "+total+" EGP";
+msg+="%0ATotal: "+total+" EGP";
 
 window.open("https://wa.me/201096380149?text="+msg);
-}
 }
 
 /* ===== WELCOME ===== */
 function enterStore(){
-  document.getElementById("welcome").style.display="none";
+document.getElementById("welcome").style.display="none";
 }
-
-/* ===== AI CLOSE CART ===== */
-window.addEventListener('click', function(e) {
-  const cart = document.getElementById('cart');
-  const cartBtn = document.querySelector('.cart-btn');
-
-  if (cart.contains(e.target)) return;
-  if (cartBtn.contains(e.target)) return;
-
-  cart.classList.remove('open');
-});
 
 render();
 
