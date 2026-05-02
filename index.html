@@ -158,9 +158,11 @@ nav{
 }
 
 .instapay {
-  background: #f5f5f5;
-  border: 1px solid #ddd;
+  background: linear-gradient(135deg,#2E7CF6,#7A5CFA);
+  color: white;
+  border: none;
 }
+
 
 .vodafone {
   background: #e60000;
@@ -255,6 +257,47 @@ nav{
   padding: 40px;
   color: white;
 }
+.footer{
+  background:#0f172a;
+  color:white;
+  margin-top:50px;
+  padding:40px 20px 10px;
+}
+
+.footer-container{
+  display:flex;
+  justify-content:space-around;
+  flex-wrap:wrap;
+  gap:20px;
+}
+
+.footer-box{
+  min-width:200px;
+}
+
+.footer-box h3, .footer-box h2{
+  margin-bottom:10px;
+}
+
+.footer-box a{
+  display:block;
+  color:#bbb;
+  text-decoration:none;
+  margin:5px 0;
+}
+
+.footer-box a:hover{
+  color:white;
+}
+
+.footer-bottom{
+  text-align:center;
+  margin-top:20px;
+  padding-top:10px;
+  border-top:1px solid #222;
+  font-size:13px;
+  color:#aaa;
+}
 
 </style>
 </head>
@@ -294,7 +337,15 @@ nav{
 <!-- CART -->
 <div class="cart" id="cart">
     <h2>Cart</h2>
+    
     <div id="cartItems"></div>
+    <button onclick="toggleCart()" 
+style="position:absolute;top:10px;right:10px;
+background:rgb(24, 23, 23);color:#fff;border:none;
+width:30px;height:30px;border-radius:50%;
+cursor:pointer;">
+X
+</button>
     <div id="total">Total: 0 EGP</div>
 
     <div class="payment-methods">
@@ -313,7 +364,7 @@ nav{
         <input id="name" placeholder="Full Name">
         <input id="address" placeholder="Address">
         <input id="phone" placeholder="Phone">
-        <button class="send-order-btn" onclick="sendOrder()">Send Order via WhatsApp</button>
+        <button class="send-order-btn" onclick="sendOrder()">Send Order </button>
     </div>
 </div>
 
@@ -353,9 +404,12 @@ let t=0;
 cart.forEach((c,i)=>{
 t+=c.price;
 box.innerHTML+=`
-<div style="display:flex;justify-content:space-between">
+<div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0">
 <span>${c.name}</span>
-<button onclick="event.stopPropagation(); removeItem(${i})">X</button>
+<button onclick="event.stopPropagation(); removeItem(${i})"
+style="background:red;color:#fff;border:none;width:25px;height:25px;border-radius:6px;cursor:pointer;">
+X
+</button>
 </div>`
 })
 
@@ -391,28 +445,44 @@ navigator.clipboard.writeText(num);
 alert("Number copied 👍");
 }
 
-/* ===== WHATSAPP ===== */{
+/* ===== Send order ===== */
 function sendOrder(){
-let msg="New Order:%0A%0A";
 
-msg+="*Name:* "+document.getElementById("name").value+"%0A";
-msg+="*Address:* "+document.getElementById("address").value+"%0A";
-msg+="*Phone:* "+document.getElementById("phone").value+"%0A%0A";
+  if(cart.length === 0){
+    alert("Cart is empty!");
+    return;
+  }
 
-msg+="*Products:*%0A";
+  let orderData = {
+    name: document.getElementById("name").value,
+    address: document.getElementById("address").value,
+    phone: document.getElementById("phone").value,
+    items: cart,
+    total: cart.reduce((sum, item) => sum + item.price, 0)
+  };
 
-let total=0;
+  // ✅ صوت النجاح
+  let sound = document.getElementById("successSound");
+sound.currentTime = 0;
+sound.play().catch(()=>{});
 
-cart.forEach((c,i)=>{
-total+=c.price;
-msg+=(i+1)+"- "+c.name+" ("+c.price+" EGP)%0A";
-});
+  // ✅ Confirm message
+  alert("✅ Order Confirmed Successfully!");
 
-msg+="%0A*Total:* "+total+" EGP";
+  // 📄 PDF
+  generatePDF(orderData);
 
-window.open("https://wa.me/201096380149?text="+msg);
+  // 📧 Sheet + Email
+  fetch("https://script.google.com/macros/s/AKfycbxWLp1bZR69z0lTh_TaY1nEJp-WUYQL5MyYX9adH9ibxXUxQ-ouvZj9ktSCbXo1Y8fxlw/exec", {
+    method: "POST",
+    body: JSON.stringify(orderData)
+  });
+
+  cart = [];
+  update();
 }
-}
+
+
 
 /* ===== WELCOME ===== */
 function enterStore(){
@@ -431,8 +501,183 @@ window.addEventListener('click', function(e) {
 });
 
 render();
+function generatePDF(order){
+
+  const itemsRows = order.items.map(item => `
+    <tr>
+      <td style="border:1px solid #ddd;padding:8px;">${item.name}</td>
+      <td style="border:1px solid #ddd;padding:8px;">${item.category}</td>
+      <td style="border:1px solid #ddd;padding:8px;">${item.price} EGP</td>
+    </tr>
+  `).join("");
+
+  const qrText = `Name:${order.name},Phone:${order.phone},Total:${order.total}`;
+
+  const element = document.createElement("div");
+
+  element.innerHTML = `
+  <div style="font-family:Arial;padding:20px;width:750px;color:#111;background:#fff">
+
+    <div style="text-align:center">
+      <h1 style="margin:0;color:#0f172a;">SULTAN STORE</h1>
+      <p>Invoice / Order Receipt</p>
+    </div>
+
+    <hr/>
+
+    <p><b>Name:</b> ${order.name}</p>
+    <p><b>Phone:</b> ${order.phone}</p>
+    <p><b>Address:</b> ${order.address}</p>
+
+    <table style="width:100%;border-collapse:collapse;margin-top:15px">
+      <thead>
+        <tr style="background:#0f172a;color:#fff">
+          <th style="padding:10px">Product</th>
+          <th>Category</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        ${itemsRows}
+      </tbody>
+    </table>
+
+    <h2 style="text-align:right;margin-top:20px">
+      Total: ${order.total} EGP
+    </h2>
+
+    <!-- QR CODE -->
+    <div style="text-align:center;margin-top:30px">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(qrText)}">
+      <p style="font-size:12px;color:#666">Scan to verify order</p>
+    </div>
+
+  </div>
+  `;
+
+  document.body.appendChild(element); // 🔥 مهم جدًا
+
+  html2pdf()
+    .set({
+      margin: 10,
+      filename: `invoice-${order.name}.pdf`,
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+    })
+    .from(element)
+    .save()
+    .then(() => {
+      document.body.removeChild(element); // تنظيف بعد الطباعة
+    });
+
+}
+function openModal(type){
+
+  let content = "";
+
+  if(type === "about"){
+    content = `
+      <h2>About Us</h2>
+      <p>Sultan Store is a premium men's fashion brand offering modern and stylish clothing with high quality.</p>
+    `;
+  }
+
+  if(type === "contact"){
+    content = `
+      <h2>Contact Us</h2>
+      <p>Phone: 01096380149</p>
+      <p>Email: support@sultanstore.com</p>
+    `;
+  }
+
+  if(type === "shipping"){
+    content = `
+      <h2>Shipping Info</h2>
+      <p>We deliver all over Egypt within 2-5 days.</p>
+      <p>Cash on delivery available.</p>
+    `;
+  }
+
+  document.getElementById("modalContent").innerHTML = content;
+  document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display = "none";
+}
+
+
 
 </script>
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-container">
 
+    <div class="footer-box">
+      <h2>SULTAN</h2>
+      <p>Premium men's fashion for the modern gentleman</p>
+    </div>
+
+    <div class="footer-box">
+      <h3>Quick Links</h3>
+      <a href="#" onclick="openModal('about')">About Us</a>
+<a href="#" onclick="openModal('contact')">Contact</a>
+<a href="#" onclick="openModal('shipping')">Shipping Info</a>
+    </div>
+
+    <div class="footer-box">
+      <h3>Customer Service</h3>
+      <a href="#">Returns</a>
+      <a href="#">Size Guide</a>
+      <a href="#">FAQ</a>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 SULTAN. All rights reserved.
+  </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<audio id="successSound">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a0b7c7.mp3?filename=success-1-6297.mp3" type="audio/mp3">
+</audio>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<div id="modal" style="
+display:none;
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,0.6);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+  <div style="
+    background:#fff;
+    padding:20px;
+    width:350px;
+    border-radius:10px;
+    position:relative;
+  ">
+
+    <button onclick="closeModal()" style="
+      position:absolute;
+      top:10px;right:10px;
+      background:red;
+      color:#fff;
+      border:none;
+      width:25px;height:25px;
+      border-radius:50%;
+      cursor:pointer;
+    ">X</button>
+
+    <div id="modalContent"></div>
+
+  </div>
+</div>
 </body>
 </html>
