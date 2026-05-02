@@ -474,7 +474,28 @@ fetch("https://script.google.com/macros/s/AKfycbxVKBufiE83BrHVAT0FaFTry4z91Qx3XX
 
 
   // ✅ Confirm message أول حاجة
-  alert("✅ Order Confirmed Successfully!");
+  let msg = document.createElement("div");
+
+msg.innerHTML = "✅ Order Confirmed Successfully!";
+msg.style.cssText = `
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+background:#0f172a;
+color:#fff;
+padding:15px 25px;
+border-radius:10px;
+z-index:99999;
+box-shadow:0 5px 15px rgba(0,0,0,0.3);
+font-weight:bold;
+`;
+
+document.body.appendChild(msg);
+
+setTimeout(()=> {
+  msg.remove();
+}, 2500);
 
   // 🔊 تشغيل الصوت بشكل مضمون
   const sound = document.getElementById("successSound");
