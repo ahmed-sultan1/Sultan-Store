@@ -453,30 +453,42 @@ function sendOrder(){
     return;
   }
 
-  let orderData = {
-    name: document.getElementById("name").value,
-    address: document.getElementById("address").value,
-    phone: document.getElementById("phone").value,
-    items: cart,
-    total: cart.reduce((sum, item) => sum + item.price, 0)
-  };
+let now = new Date();
+let orderId = "ORD-" + Date.now().toString().slice(-6);
 
-  // ✅ صوت النجاح
-  let sound = document.getElementById("successSound");
-sound.currentTime = 0;
-sound.play().catch(()=>{});
+let orderData = {
+  orderId: orderId,
+  name: document.getElementById("name").value,
+  address: document.getElementById("address").value,
+  phone: document.getElementById("phone").value,
+  items: cart,
+  total: cart.reduce((sum, item) => sum + Number(item.price), 0),
+  date: now.toLocaleDateString(),
+  time: now.toLocaleTimeString()
+};
 
-  // ✅ Confirm message
+fetch("https://script.google.com/macros/s/AKfycbxVKBufiE83BrHVAT0FaFTry4z91Qx3XXhSSXfYT1JQuwV6_XeU0yeLWZa1MgGOar7emQ/exec", {
+  method: "POST",
+  body: JSON.stringify(orderData)
+});
+
+
+  // ✅ Confirm message أول حاجة
   alert("✅ Order Confirmed Successfully!");
 
-  // 📄 PDF
-  generatePDF(orderData);
+  // 🔊 تشغيل الصوت بشكل مضمون
+  const sound = document.getElementById("successSound");
+  if(sound){
+    sound.currentTime = 0;
+    sound.play().catch(()=>{});
+  }
 
-  // 📧 Sheet + Email
-  fetch("https://script.google.com/macros/s/AKfycbxWLp1bZR69z0lTh_TaY1nEJp-WUYQL5MyYX9adH9ibxXUxQ-ouvZj9ktSCbXo1Y8fxlw/exec", {
-    method: "POST",
-    body: JSON.stringify(orderData)
-  });
+  // 📄 PDF بعد تأخير بسيط (ده سر الحل)
+  setTimeout(() => {
+    generatePDF(orderData);
+  }, 300);
+
+  
 
   cart = [];
   update();
@@ -503,75 +515,136 @@ window.addEventListener('click', function(e) {
 render();
 function generatePDF(order){
 
-  const itemsRows = order.items.map(item => `
-    <tr>
-      <td style="border:1px solid #ddd;padding:8px;">${item.name}</td>
-      <td style="border:1px solid #ddd;padding:8px;">${item.category}</td>
-      <td style="border:1px solid #ddd;padding:8px;">${item.price} EGP</td>
+const itemsRows = order.items.map(item => `
+<tr>
+  <td style="border:1px solid #ddd;padding:8px;">
+    ${item.name}
+  </td>
+
+  <td style="border:1px solid #ddd;padding:8px;">
+    ${item.category}
+  </td>
+
+  <td style="<td style="border:1px solid #ddd;padding:8px;">
+    ${item.price} EGP
+  </td>
+</tr>
+`).join("");
+
+  const orderId = Date.now();
+
+const qrText = `https://sultan-store.vercel.app/order.html?id=${order.orderId}`;
+
+  const wrapper = document.createElement("div");
+
+  wrapper.innerHTML = `
+    <div id="invoice" style="
+      font-family:Arial;
+      padding:20px;
+      width:800px;
+      background:#fff;
+      color:#111;
+      box-sizing:border-box;
+    ">
+
+      <h1 style="text-align:center;color:#0f172a">SULTAN STORE</h1>
+      <p style="text-align:center">Invoice</p>
+
+      <hr/>
+
+      <p><b>Name:</b> ${order.name}</p>
+      <p><b>Phone:</b> ${order.phone}</p>
+      <p><b>Address:</b> ${order.address}</p>
+       <p><b>Date:</b> ${order.date}</p>
+      <p><b>Time:</b> ${order.time}</p>
+
+<table style="
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+  table-layout:fixed;
+  font-size:13px;
+  border:1px solid #ddd;
+">
+
+  <thead>
+    <tr style="background:#0f172a;color:#fff">
+      <th style="padding:10px;width:50%;text-align:left;">Product</th>
+      <th style="width:25%;text-align:left;">Category</th>
+      <th style="width:25%;text-align:left;">Price</th>
     </tr>
-  `).join("");
+  </thead>
 
-  const qrText = `Name:${order.name},Phone:${order.phone},Total:${order.total}`;
+  <tbody>
+    ${itemsRows}
+  </tbody>
 
-  const element = document.createElement("div");
+     </table>
 
-  element.innerHTML = `
-  <div style="font-family:Arial;padding:20px;width:750px;color:#111;background:#fff">
+    <div style="width:100%;display:flex;justify-content:flex-end;margin-top:25px;">
+  <h2 style="margin:0;padding-right:10px;">
+    Total: ${order.total} EGP
+  </h2>
+</div>
 
-    <div style="text-align:center">
-      <h1 style="margin:0;color:#0f172a;">SULTAN STORE</h1>
-      <p>Invoice / Order Receipt</p>
+      <div style="
+        text-align:center;
+        margin-top:30px;
+        padding:20px;
+        border:1px solid #eee;
+        width:100%;
+        box-sizing:border-box;
+      ">
+
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=10&data=${encodeURIComponent(qrText)}"
+          style="
+            width:200px;
+            height:200px;
+            display:block;
+            margin:0 auto;
+            object-fit:contain;
+          "
+        >
+
+        <p style="font-size:12px;color:#666;margin-top:10px">
+          Scan to verify order
+        </p>
+
+      </div>
+
     </div>
-
-    <hr/>
-
-    <p><b>Name:</b> ${order.name}</p>
-    <p><b>Phone:</b> ${order.phone}</p>
-    <p><b>Address:</b> ${order.address}</p>
-
-    <table style="width:100%;border-collapse:collapse;margin-top:15px">
-      <thead>
-        <tr style="background:#0f172a;color:#fff">
-          <th style="padding:10px">Product</th>
-          <th>Category</th>
-          <th>Price</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        ${itemsRows}
-      </tbody>
-    </table>
-
-    <h2 style="text-align:right;margin-top:20px">
-      Total: ${order.total} EGP
-    </h2>
-
-    <!-- QR CODE -->
-    <div style="text-align:center;margin-top:30px">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(qrText)}">
-      <p style="font-size:12px;color:#666">Scan to verify order</p>
-    </div>
-
-  </div>
   `;
 
-  document.body.appendChild(element); // 🔥 مهم جدًا
+  document.body.appendChild(wrapper);
+
+  const invoice = document.getElementById("invoice");
 
   html2pdf()
     .set({
       margin: 10,
-      filename: `invoice-${order.name}.pdf`,
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      filename: `invoice-${order.name}-${orderId}.pdf`,
+      html2canvas: {
+        scale: 1.8,
+        useCORS: true,
+        scrollY: 0
+      },
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "portrait"
+      }
     })
-    .from(element)
+    .from(invoice)
     .save()
     .then(() => {
-      document.body.removeChild(element); // تنظيف بعد الطباعة
+      document.body.removeChild(wrapper);
     });
 
 }
+
+
+
 function openModal(type){
 
   let content = "";
